@@ -18,8 +18,8 @@
 		"sort-packages": true
 	},
 	"require": {
-		"typo3/cms-core": "^10.0",
-		"friendsoftypo3/taskcenter": "^10.0"
+		"typo3/cms-core": "^10.0 || ^11.0",
+		"friendsoftypo3/taskcenter": "^10.0 || v11.x-dev"
 	},
 	"conflict": {
 		"typo3/cms": "*"
