@@ -6,7 +6,7 @@ CREATE TABLE sys_action (
   type tinyint(3) unsigned DEFAULT '0' NOT NULL,
   t1_userprefix varchar(20) DEFAULT '' NOT NULL,
   t1_copy_of_user int(11) DEFAULT '0' NOT NULL,
-  t1_allowed_groups tinytext,
+  t1_allowed_groups TEXT,
   t2_data blob,
   assign_to_groups int(11) DEFAULT '0' NOT NULL,
   t1_create_user_dir tinyint(4) DEFAULT '0' NOT NULL,
@@ -26,5 +26,13 @@ CREATE TABLE sys_action_asgr_mm (
   sorting int(11) unsigned DEFAULT '0' NOT NULL,
   KEY uid_local (uid_local),
   KEY uid_foreign (uid_foreign)
+);
+
+#
+# Table structure for table 'be_users'
+#
+CREATE TABLE be_users
+(
+    createdByAction int(11) DEFAULT '0' NOT NULL,
 );
 

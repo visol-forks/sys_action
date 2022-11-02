@@ -103,7 +103,7 @@ return [
                 'foreign_table' => 'be_groups',
                 'foreign_table_where' => 'ORDER BY be_groups.title',
                 'size' => 10,
-                'maxitems' => 20,
+                'maxitems' => 200,
                 'autoSizeMax' => 10
             ]
         ],
