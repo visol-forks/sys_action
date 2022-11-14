@@ -16,6 +16,7 @@ namespace TYPO3\CMS\SysAction;
 
 use Doctrine\DBAL\DBALException;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -186,7 +187,10 @@ class ActionTask implements \TYPO3\CMS\Taskcenter\TaskInterface
 
         // Editors can only see the actions which are assigned to a usergroup they belong to
         if (!$backendUser->isAdmin()) {
-            $groupList = $backendUser->groupList ?: '0';
+
+            $context = GeneralUtility::makeInstance(Context::class);
+            $backendUserAspect = $context->getAspect('backend.user');
+            $groupIds = $backendUserAspect->get('groupIds');
 
             $queryBuilder->getRestrictions()
                 ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
@@ -214,7 +218,7 @@ class ActionTask implements \TYPO3\CMS\Taskcenter\TaskInterface
                     $queryBuilder->expr()->in(
                         'be_groups.uid',
                         $queryBuilder->createNamedParameter(
-                            GeneralUtility::intExplode(',', $groupList, true),
+                            $groupIds,
                             Connection::PARAM_INT_ARRAY
                         )
                     )
