@@ -228,7 +228,7 @@ class ActionTask implements \TYPO3\CMS\Taskcenter\TaskInterface
         /** @var \TYPO3\CMS\Backend\Routing\UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
         $queryResult = $queryBuilder->execute();
-        while ($actionRow = $queryResult->fetch()) {
+        while ($actionRow = $queryResult->fetchAssociative()) {
             $editActionLink = '';
 
             // Admins are allowed to edit sys_action records
@@ -500,7 +500,7 @@ class ActionTask implements \TYPO3\CMS\Taskcenter\TaskInterface
             ->execute();
 
         // Render the user records
-        while ($row = $res->fetch()) {
+        while ($row = $res->fetchAssociative()) {
             $icon = '<span title="' . htmlspecialchars('uid=' . $row['uid']) . '">' . $this->iconFactory->getIconForRecord('be_users', $row, Icon::SIZE_SMALL)->render() . '</span>';
             $line = $icon . $this->action_linkUserName($row['username'], $row['realName'], $action['uid'], $row['uid']);
             // Selected user
