@@ -9,7 +9,6 @@ return [
         'prependAtCopy' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.prependAtCopy',
         'title' => 'LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'adminOnly' => true,
         'rootLevel' => -1,
         'enablecolumns' => [
@@ -28,7 +27,8 @@ return [
                 'type' => 'input',
                 'size' => 25,
                 'max' => 255,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
+                'required' => true,
             ],
         ],
         'description' => [
@@ -46,8 +46,7 @@ return [
                 'renderType' => 'checkboxToggle',
                 'items' => [
                     [
-                        0 => '',
-                        1 => '',
+                        'label' => '',
                         'invertStateDisplay' => true,
                     ],
                 ],
@@ -59,12 +58,11 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['', '0'],
-                    ['LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action.type.1', '1'],
-                    ['LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action.type.2', '2'],
-                    ['LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action.type.3', '3'],
-                    ['LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action.type.4', '4'],
-                    ['LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action.type.5', '5'],
+                    ['label' => '', 'value' => '0'],
+                    ['label' => 'LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action.type.1', 'value' => '1'],
+                    ['label' => 'LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action.type.3', 'value' => '3'],
+                    ['label' => 'LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action.type.4', 'value' => '4'],
+                    ['label' => 'LLL:EXT:sys_action/Resources/Private/Language/locallang_tca.xlf:sys_action.type.5', 'value' => '5'],
                 ],
             ],
         ],
@@ -110,12 +108,6 @@ return [
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
-                'items' => [
-                    [
-                        0 => '',
-                        1 => '',
-                    ],
-                ],
             ],
         ],
         't1_copy_of_user' => [
@@ -145,9 +137,9 @@ return [
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                'special' => 'tables',
+                'itemsProcFunc' => \TYPO3\CMS\SysAction\Tca\TableItemsProcFunc::class . '->getTables',
                 'items' => [
-                    ['', ''],
+                    ['label' => '', 'value' => ''],
                 ],
             ],
         ],
@@ -176,15 +168,6 @@ return [
         '1' => ['showitem' => '
             --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
                 type,title,t1_userprefix,t1_copy_of_user,t1_allowed_groups,t1_create_user_dir,
-            --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
-                hidden,assign_to_groups,
-            --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:notes,
-                description,
-            --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:extended,
-        '],
-        '2' => ['showitem' => '
-            --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
-                type,title,
             --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
                 hidden,assign_to_groups,
             --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:notes,

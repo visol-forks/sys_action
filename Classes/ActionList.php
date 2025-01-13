@@ -16,9 +16,9 @@ namespace TYPO3\CMS\SysAction;
  *
  * The TYPO3 project - inspiring people to share!
  */
+use TYPO3\CMS\Backend\RecordList\DatabaseRecordList;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Recordlist\RecordList\DatabaseRecordList;
 
 /**
  * Class for the list rendering of Web>Task Center module
@@ -29,18 +29,18 @@ class ActionList extends DatabaseRecordList
     /**
      * Creates the URL to this script, including all relevant GPvars
      * Fixed GPvars are id, table, imagemode, returnUrl, search_field, search_levels and showLimit
-     * The GPvars "sortField" and "sortRev" are also included UNLESS they are found in the $excludeList variable.
+     * The GPvars "sortField" and "sortRev" are also included UNLESS they are found in the $exclList variable.
      *
-     * @param string $alternativeId Alternative id value. Enter blank string for the current id ($this->id)
+     * @param string $altId Alternative id value. Enter blank string for the current id ($this->id)
      * @param string $table Table name to display. Enter "-1" for the current table.
-     * @param string $excludeList Comma separated list of fields NOT to include ("sortField" or "sortRev")
+     * @param string $exclList Comma separated list of fields NOT to include ("sortField" or "sortRev")
      * @return string
      */
-    public function listURL($alternativeId = '', $table = '-1', $excludeList = '')
+    public function listURL($altId = '', $table = '-1', $exclList = '')
     {
         $urlParameters = [];
-        if ((string)$alternativeId !== '') {
-            $urlParameters['id'] = $alternativeId;
+        if ((string)$altId !== '') {
+            $urlParameters['id'] = $altId;
         } else {
             $urlParameters['id'] = $this->id;
         }
@@ -52,7 +52,7 @@ class ActionList extends DatabaseRecordList
         if ($this->returnUrl) {
             $urlParameters['returnUrl'] = $this->returnUrl;
         }
-        if ((!$excludeList || !GeneralUtility::inList($excludeList, 'search_field')) && $this->searchString) {
+        if ((!$exclList || !GeneralUtility::inList($exclList, 'search_field')) && $this->searchString) {
             $urlParameters['search_field'] = $this->searchString;
         }
         if ($this->searchLevels) {
@@ -61,20 +61,20 @@ class ActionList extends DatabaseRecordList
         if ($this->showLimit) {
             $urlParameters['showLimit'] = $this->showLimit;
         }
-        if ((!$excludeList || !GeneralUtility::inList($excludeList, 'pointer')) && $this->page) {
+        if ((!$exclList || !GeneralUtility::inList($exclList, 'pointer')) && $this->page) {
             $urlParameters['pointer'] = $this->page;
         }
-        if ((!$excludeList || !GeneralUtility::inList($excludeList, 'sortField')) && $this->sortField) {
+        if ((!$exclList || !GeneralUtility::inList($exclList, 'sortField')) && $this->sortField) {
             $urlParameters['sortField'] = $this->sortField;
         }
-        if ((!$excludeList || !GeneralUtility::inList($excludeList, 'sortRev')) && $this->sortRev) {
+        if ((!$exclList || !GeneralUtility::inList($exclList, 'sortRev')) && $this->sortRev) {
             $urlParameters['sortRev'] = $this->sortRev;
         }
-        if (GeneralUtility::_GP('SET')) {
-            $urlParameters['SET'] = GeneralUtility::_GP('SET');
+        if ($GLOBALS['TYPO3_REQUEST']->getParsedBody()['SET'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['SET'] ?? null) {
+            $urlParameters['SET'] = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['SET'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['SET'] ?? null;
         }
-        if (GeneralUtility::_GP('show')) {
-            $urlParameters['show'] = (int)GeneralUtility::_GP('show');
+        if ($GLOBALS['TYPO3_REQUEST']->getParsedBody()['show'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['show'] ?? null) {
+            $urlParameters['show'] = (int)($GLOBALS['TYPO3_REQUEST']->getParsedBody()['show'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['show'] ?? null);
         }
         /** @var UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);

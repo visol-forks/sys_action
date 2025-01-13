@@ -16,27 +16,35 @@ namespace TYPO3\CMS\SysAction\Backend\ToolbarItems;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use Doctrine\DBAL\ArrayParameterType;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Toolbar\RequestAwareToolbarItemInterface;
 use TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface;
+use TYPO3\CMS\Backend\View\BackendViewFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\RootLevelRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\SysAction\ActionTask;
 
 /**
  * Adds action links to the backend's toolbar
  * @internal This is a specific hook implementation and is not considered part of the Public TYPO3 API.
  */
-class ActionToolbarItem implements ToolbarItemInterface
+class ActionToolbarItem implements ToolbarItemInterface, RequestAwareToolbarItemInterface
 {
-    /**
-     * @var array
-     */
-    protected $availableActions = [];
+    protected array $availableActions = [];
+    private ServerRequestInterface $request;
+
+    public function __construct(private readonly UriBuilder $uriBuilder, private readonly BackendViewFactory $backendViewFactory) {}
+
+    public function setRequest(ServerRequestInterface $request): void
+    {
+        $this->request = $request;
+    }
 
     /**
      * Render toolbar icon via Fluid
@@ -45,7 +53,8 @@ class ActionToolbarItem implements ToolbarItemInterface
      */
     public function getItem()
     {
-        return $this->getFluidTemplateObject('ToolbarItem.html')->render();
+        $view = $this->backendViewFactory->create($this->request, ['friendsoftypo3/sys-action', 'typo3/cms-backend']);
+        return $view->render('ToolbarItems/SysActionToolbarItem');
     }
 
     /**
@@ -55,9 +64,9 @@ class ActionToolbarItem implements ToolbarItemInterface
      */
     public function getDropDown()
     {
-        $view = $this->getFluidTemplateObject('DropDown.html');
+        $view = $this->backendViewFactory->create($this->request, ['friendsoftypo3/sys-action']);
         $view->assign('actions', $this->availableActions);
-        return $view->render();
+        return $view->render('ToolbarItems/SysActionToolbarItemDropDown');
     }
 
     /**
@@ -115,20 +124,18 @@ class ActionToolbarItem implements ToolbarItemInterface
                         'be_groups.uid',
                         $queryBuilder->createNamedParameter(
                             GeneralUtility::intExplode(',', $groupList, true),
-                            Connection::PARAM_INT_ARRAY
+                            ArrayParameterType::INTEGER
                         )
                     )
                 )
                 ->groupBy('sys_action.uid');
         }
 
-        /** @var UriBuilder $uriBuilder */
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $result = $queryBuilder->execute();
+        $result = $queryBuilder->executeQuery();
         while ($actionRow = $result->fetchAssociative()) {
             $actionRow['link'] = sprintf(
                 '%s&SET[mode]=tasks&SET[function]=sys_action.%s&show=%u',
-                (string)$uriBuilder->buildUriFromRoute('user_task'),
+                (string)$this->uriBuilder->buildUriFromRoute('user_task'),
                 ActionTask::class, // @todo: class name string is hand over as url parameter?!
                 $actionRow['uid']
             );
@@ -187,26 +194,5 @@ class ActionToolbarItem implements ToolbarItemInterface
     protected function getBackendUser()
     {
         return $GLOBALS['BE_USER'];
-    }
-
-    /**
-     * Returns a new standalone view, shorthand function
-     *
-     * @param string $filename Which templateFile should be used.
-     * @return StandaloneView
-     */
-    protected function getFluidTemplateObject(string $filename): StandaloneView
-    {
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setLayoutRootPaths(['EXT:sys_action/Resources/Private/Layouts']);
-        $view->setPartialRootPaths([
-            'EXT:backend/Resources/Private/Partials/ToolbarItems',
-            'EXT:sys_action/Resources/Private/Partials',
-        ]);
-        $view->setTemplateRootPaths(['EXT:sys_action/Resources/Private/Templates/ToolbarItems']);
-        $view->setTemplate($filename);
-
-        $view->getRequest()->setControllerExtensionName('SysAction');
-        return $view;
     }
 }
