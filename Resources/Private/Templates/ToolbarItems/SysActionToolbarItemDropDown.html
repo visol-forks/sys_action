@@ -1,0 +1,24 @@
+<html
+		xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+		xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+		data-namespace-typo3-fluid="true"
+>
+
+<p class="h3 dropdown-headline"><f:translate key="LLL:EXT:sys_action/Resources/Private/Language/locallang.xlf:sys_action" /></p>
+<ul class="dropdown-list">
+	<f:for each="{actions}" as="action">
+		<li>
+			<a href="{action.link -> f:format.htmlspecialchars()}" class="dropdown-item t3js-toolbar-cache-flush-action">
+                <span class="dropdown-item-columns">
+                    <span class="dropdown-item-column dropdown-item-column-icon">
+                        <core:iconForRecord table="sys_action" row="{action}" size="small"/>
+                    </span>
+                    <span class="dropdown-item-column dropdown-item-column-text">
+                        {action.title -> f:format.htmlspecialchars()}
+                    </span>
+                </span>
+			</a>
+		</li>
+	</f:for>
+</ul>
+</html>

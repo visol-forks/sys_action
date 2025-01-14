@@ -12,5 +12,11 @@ if (!defined('TYPO3')) {
                 'type' => 'passthrough',
             ],
         ],
+        // The owner of the be_user
+        'cruser_id' => [
+            'config' => [
+                'type' => 'passthrough',
+            ],
+        ],
     ]
 );

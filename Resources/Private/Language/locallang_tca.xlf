@@ -36,9 +36,6 @@
 			<trans-unit id="sys_action.type.1">
 				<source>Create Backend User</source>
 			</trans-unit>
-			<trans-unit id="sys_action.type.2">
-				<source>SQL query</source>
-			</trans-unit>
 			<trans-unit id="sys_action.type.3">
 				<source>Record list</source>
 			</trans-unit>

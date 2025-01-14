@@ -7,14 +7,12 @@ CREATE TABLE sys_action (
   t1_userprefix varchar(20) DEFAULT '' NOT NULL,
   t1_copy_of_user int(11) DEFAULT '0' NOT NULL,
   t1_allowed_groups tinytext,
-  t2_data blob,
   assign_to_groups int(11) DEFAULT '0' NOT NULL,
   t1_create_user_dir tinyint(4) DEFAULT '0' NOT NULL,
   t3_listPid int(11) DEFAULT '0' NOT NULL,
   t3_tables varchar(255) DEFAULT '' NOT NULL,
   t4_recordsToEdit text,
 
-  KEY cruser_id (cruser_id)
 );
 
 #
@@ -29,5 +27,7 @@ CREATE TABLE sys_action_asgr_mm (
 );
 
 CREATE TABLE be_users (
-  createdByAction int(11) DEFAULT '0' NOT NULL
+  createdByAction int(11) DEFAULT '0' NOT NULL,
+  cruser_id int(11) DEFAULT '0' NOT NULL,
+  KEY cruser_id (cruser_id)
 );

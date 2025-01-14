@@ -56,7 +56,7 @@ class ActionVisibleFieldsTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function actionFormContainsExpectedFields()
+    public function actionFormContainsExpectedFields(): void
     {
         $this->setUpBackendUserFromFixture(1);
         $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
