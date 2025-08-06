@@ -343,6 +343,8 @@ class ActionTask implements TaskInterface
      */
     protected function viewNewBackendUser($record)
     {
+        $this->pageRenderer->loadJavaScriptModule('@friendsoftypo3/sys-action/action-task.js');
+
         $content = '';
         $beRec = BackendUtility::getRecord('be_users', (int)$record['t1_copy_of_user']);
         // A record is need which is used as copy for the new user
