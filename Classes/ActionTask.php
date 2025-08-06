@@ -453,7 +453,7 @@ class ActionTask implements TaskInterface
                             <h4 class="form-section-headline">' . htmlspecialchars($this->getLanguageService()->sL('LLL:EXT:sys_action/Resources/Private/Language/locallang.xlf:action_t1_legend_configuration')) . '</h4>
                             <div class="form-group">
                                 <label for="field_usergroup">' . htmlspecialchars($this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:be_users.usergroup')) . '</label>
-                                <select id="field_usergroup" class="form-control" name="data[usergroup][]" multiple="multiple">
+                                <select id="field_usergroup" class="form-select" style="height:250px" name="data[usergroup][]" multiple="multiple">
                                     ' . $this->getUsergroups($record, $vars) . '
                                 </select>
                             </div>
